@@ -1,0 +1,1349 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Évaluation rapide – Transferts thermiques (Séquence 2)</title>
+<style>
+:root{
+  --ink:#1c2620;
+  --paper:#f6f3ea;
+  --clay:#a6592e;
+  --leaf:#3f5d3a;
+  --sky:#2e4d5e;
+  --paper-2:#fbf9f3;
+  --line: rgba(28,38,32,0.14);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Avenir Next","Avenir","Segoe UI",sans-serif;
+  line-height:1.5;
+  padding-bottom:80px;
+}
+h1,h2,h3,.title-font{
+  font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  font-weight:600;
+}
+.mono{font-family:"SF Mono","Consolas","Menlo",monospace;}
+
+/* ---- Hero header ---- */
+header.hero{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(160deg,var(--sky) 0%,#3a6273 55%,#4f7d8a 100%);
+  color:#f6f3ea;
+  padding:38px 24px 30px;
+}
+header.hero .soleil{
+  position:absolute;
+  top:-40px; right:-40px;
+  width:160px;height:160px;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, #ffe9b8, #e8b96a 60%, rgba(232,185,106,0) 72%);
+  opacity:0.9;
+}
+header.hero .eyebrow{
+  font-family:"SF Mono",monospace;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  font-size:.72rem;
+  opacity:.85;
+  margin:0 0 6px;
+}
+header.hero h1{
+  margin:0 0 8px;
+  font-size:clamp(1.5rem,3.4vw,2.15rem);
+  max-width:640px;
+}
+header.hero p.sub{
+  margin:0;
+  max-width:640px;
+  font-size:.95rem;
+  opacity:.92;
+}
+.hero-diagram{
+  display:flex;
+  gap:10px;
+  margin-top:22px;
+  max-width:640px;
+}
+.hero-diagram .cell{
+  flex:1;
+  background:rgba(246,243,234,0.12);
+  border:1px solid rgba(246,243,234,0.28);
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:.78rem;
+}
+.hero-diagram .cell b{display:block;font-family:"Iowan Old Style",serif;font-size:1.05rem;margin-bottom:2px;}
+
+/* ---- layout ---- */
+main{max-width:760px;margin:0 auto;padding:0 20px;}
+
+.card{
+  background:var(--paper-2);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:22px 22px;
+  margin:22px 0;
+  box-shadow:0 1px 2px rgba(28,38,32,0.04);
+}
+
+.identity-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+.identity-grid .full{grid-column:1/-1;}
+label{
+  display:block;
+  font-size:.78rem;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  color:var(--sky);
+  margin-bottom:5px;
+  font-family:"SF Mono",monospace;
+}
+input[type=text],input[type=number],select{
+  width:100%;
+  padding:10px 12px;
+  border:1.5px solid var(--line);
+  border-radius:8px;
+  background:#fff;
+  font-size:1rem;
+  font-family:inherit;
+  color:var(--ink);
+  user-select:text;
+}
+input[type=text]:focus,input[type=number]:focus,select:focus{
+  outline:none;
+  border-color:var(--sky);
+}
+
+/* ---- mode tabs (évaluation notée / entraînement libre) ---- */
+.mode-tabs{display:flex;gap:8px;margin-bottom:16px;}
+.mode-tab{
+  flex:1;padding:10px 12px;border-radius:8px;border:1.5px solid var(--line);
+  background:#fff;color:var(--sky);font-family:inherit;font-size:.86rem;
+  cursor:pointer;text-align:center;
+}
+.mode-tab.active{border-color:var(--clay);background:rgba(166,89,46,0.08);color:var(--clay);font-weight:600;}
+
+/* ---- règles de fonctionnement ---- */
+#rules-card ul{margin:0;padding-left:20px;}
+#rules-card li{font-size:.86rem;color:#54605a;margin:4px 0;}
+
+.section-title{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+  margin:34px 0 6px;
+}
+.section-title .num{
+  font-family:"Iowan Old Style",serif;
+  font-size:1.9rem;
+  color:var(--clay);
+}
+.section-title h2{margin:0;font-size:1.35rem;}
+.section-note{font-size:.88rem;color:#54605a;margin:0 0 16px;}
+
+.q{
+  border-top:1px solid var(--line);
+  padding:18px 0;
+}
+.q:first-of-type{border-top:none;}
+.q-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:10px;
+  margin-bottom:8px;
+}
+.q-num{
+  font-family:"SF Mono",monospace;
+  font-size:.82rem;
+  color:var(--clay);
+  font-weight:600;
+}
+.q-pts{
+  font-family:"SF Mono",monospace;
+  font-size:.72rem;
+  color:#7a847d;
+  white-space:nowrap;
+}
+.q-text{margin:0 0 10px;font-size:1rem;}
+.q-text .mono{background:rgba(63,93,58,0.08);padding:1px 5px;border-radius:4px;}
+.q-sub{margin:0 0 6px;font-size:.92rem;color:#3a443d;}
+
+.answer-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.answer-row input[type=text]{max-width:220px;}
+.answer-row select{width:auto;max-width:200px;}
+.unit-tag{font-family:"SF Mono",monospace;font-size:.85rem;color:#54605a;}
+
+.qcm-options{display:flex;flex-direction:column;gap:8px;margin-top:4px;}
+.qcm-options label{
+  display:flex;align-items:center;gap:9px;
+  text-transform:none;letter-spacing:0;font-family:inherit;
+  font-size:.98rem;color:var(--ink);
+  background:#fff;border:1.5px solid var(--line);
+  border-radius:8px;padding:10px 12px;cursor:pointer;
+  margin-bottom:0;
+}
+.qcm-options input{accent-color:var(--clay);width:16px;height:16px;flex:none;}
+.qcm-options label:has(input:checked){border-color:var(--clay);background:rgba(166,89,46,0.06);}
+
+.feedback{
+  margin-top:10px;
+  font-size:.86rem;
+  padding:8px 10px;
+  border-radius:7px;
+  display:none;
+}
+.feedback.ok{background:rgba(63,93,58,0.12);color:var(--leaf);}
+.feedback.ko{background:rgba(166,89,46,0.12);color:var(--clay);}
+
+/* ---- progress + submit bar ---- */
+.progress-bar{
+  position:sticky;top:0;z-index:5;
+  background:rgba(246,243,234,0.94);
+  -webkit-backdrop-filter:blur(4px);
+  backdrop-filter:blur(4px);
+  border-bottom:1px solid var(--line);
+  padding:9px 20px;
+  display:flex;align-items:center;gap:12px;
+  font-family:"SF Mono",monospace;font-size:.78rem;color:var(--sky);
+}
+#progress-student{font-weight:600;color:var(--clay);white-space:nowrap;}
+.progress-track{
+  flex:1;height:6px;background:var(--line);border-radius:99px;overflow:hidden;
+}
+.progress-fill{height:100%;width:0%;background:var(--clay);transition:width .2s;}
+
+.submit-wrap{text-align:center;margin:30px 0 10px;}
+button.submit-btn{
+  background:var(--clay);color:#fff;border:none;
+  padding:14px 30px;border-radius:99px;
+  font-size:1.02rem;font-family:"Iowan Old Style",serif;font-weight:600;
+  cursor:pointer;
+}
+button.submit-btn:disabled{opacity:.5;cursor:not-allowed;}
+.status-line{text-align:center;font-size:.85rem;color:#54605a;margin-top:10px;min-height:1.2em;}
+
+/* ---- gate (code d'accès) ---- */
+.gate-actions{margin-top:14px;text-align:center;}
+#gate-confirm{margin-top:16px;padding-top:16px;border-top:1px solid var(--line);text-align:center;}
+#gate-confirm p{margin:0 0 12px;}
+button.link-btn{
+  background:none;border:none;color:var(--sky);text-decoration:underline;
+  cursor:pointer;font-size:.85rem;padding:8px 4px;font-family:inherit;display:block;margin:8px auto 0;
+}
+
+/* ---- result screen ---- */
+#result{display:none;}
+.score-card{
+  text-align:center;
+  padding:30px 20px;
+}
+.score-card .big{
+  font-family:"Iowan Old Style",serif;
+  font-size:3.4rem;
+  color:var(--clay);
+  margin:6px 0;
+}
+.score-card .big small{font-size:1.4rem;color:#7a847d;}
+.cat-summary{display:flex;gap:14px;justify-content:center;margin:16px 0;flex-wrap:wrap;}
+.cat-summary > div{background:rgba(63,93,58,0.08);border-radius:10px;padding:10px 18px;}
+.cat-label{display:block;font-family:"SF Mono",monospace;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--sky);}
+.cat-value{display:block;font-family:"Iowan Old Style",serif;font-size:1.3rem;color:var(--clay);margin-top:2px;}
+.cat-missed-line{font-size:.86rem;color:#54605a;margin:6px 0 16px;}
+
+/* ---- anti-copie : dissuasion de sélection/copie du texte des questions ---- */
+.card, .q-text, .section-note{user-select:none;-webkit-user-select:none;}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#eef0ea; --paper:#171d18; --paper-2:#1f261f; --line: rgba(238,240,234,0.14);
+  }
+  body{background:var(--paper);}
+  input[type=text],input[type=number],select{background:#12160f;color:var(--ink);border-color:var(--line);}
+  .qcm-options label{background:#12160f;}
+  .mode-tab{background:#12160f;}
+  .progress-bar{background:rgba(23,29,24,0.94);}
+}
+:root[data-theme="dark"]{
+  --ink:#eef0ea; --paper:#171d18; --paper-2:#1f261f; --line: rgba(238,240,234,0.14);
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar">
+  <span id="progress-student"></span>
+  <span id="progress-label">0 / 14 répondues</span>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+
+<header class="hero">
+  <div class="soleil"></div>
+  <p class="eyebrow">AC · Terminale STI2D — Séquence 2</p>
+  <h1>Évaluation rapide : transferts thermiques</h1>
+  <p class="sub">Reprends les méthodes vues en classe (carnet Séquence 2 — Transferts thermiques). Réponds directement dans les champs ci-dessous ; ta note s'affiche à la fin et m'est transmise automatiquement. Les valeurs de ton sujet sont propres à ta copie : ne les compare pas avec celles de ton voisin.</p>
+  <div class="hero-diagram">
+    <div class="cell"><b>10</b>questions — résistance &amp; flux thermique (15 pts)</div>
+    <div class="cell"><b>4</b>questions — chaleur sensible &amp; latente (5 pts)</div>
+    <div class="cell"><b>/20</b>note calculée automatiquement</div>
+  </div>
+</header>
+
+<main>
+
+<div class="card" id="rules-card">
+  <p class="section-note" style="margin:0 0 8px;"><strong>Avant de commencer — règles de fonctionnement :</strong></p>
+  <ul>
+    <li>Le copier-coller et le clic droit sont désactivés sur cette page.</li>
+    <li>Si tu changes d'onglet ou que tu quittes la page pendant l'évaluation, le nombre de fois et le temps passé ailleurs sont enregistrés et transmis à ton professeur.</li>
+    <li>Chaque copie a des valeurs différentes : ne compare pas tes résultats avec ceux d'un camarade, ce n'est pas un signe d'erreur.</li>
+    <li>Une fois ton identité validée, reste connecté·e sous ton propre nom (affiché en haut de la page) jusqu'à la fin.</li>
+    <li>La touche Entrée ne valide pas tes réponses ni n'envoie la copie : utilise le bouton prévu à cet effet.</li>
+  </ul>
+</div>
+
+<div class="card" id="gate-card">
+  <div class="mode-tabs" id="mode-tabs">
+    <button type="button" class="mode-tab active" id="tab-eval" data-mode="evaluation">Évaluation notée</button>
+    <button type="button" class="mode-tab" id="tab-entrainement" data-mode="entrainement">Entraînement libre</button>
+  </div>
+  <div class="identity-grid">
+    <div class="full">
+      <label for="f-nom">Ton nom</label>
+      <select id="f-nom">
+        <option value="" selected disabled>— Sélectionne ton nom —</option>
+      </select>
+    </div>
+    <div class="full" id="code-field-wrap">
+      <label for="f-code">Code d'accès</label>
+      <input type="text" id="f-code" placeholder="le code donné par ton professeur" inputmode="numeric" autocomplete="off">
+    </div>
+  </div>
+  <p class="section-note" id="entrainement-note" hidden style="margin:10px 0 0;">Mode entraînement : pas de code nécessaire, juste ton nom. Tes résultats sont enregistrés à part et ne comptent pas pour la note. Tu peux refaire l'entraînement autant de fois que tu veux, avec de nouvelles valeurs à chaque tentative.</p>
+  <div class="gate-actions">
+    <button type="button" class="submit-btn" id="gate-btn">Valider mon code</button>
+    <p class="status-line" id="gate-status"></p>
+  </div>
+  <div id="gate-confirm" hidden>
+    <p>Bonjour <strong id="gate-name"></strong> — <span id="gate-classe"></span>. C'est bien toi ?</p>
+    <button type="button" class="submit-btn" id="gate-start-btn">Oui, commencer</button>
+    <button type="button" class="link-btn" id="gate-reset-btn">Ce n'est pas moi</button>
+  </div>
+</div>
+
+<form id="quiz-form" autocomplete="off">
+<div id="quiz-body" hidden>
+
+  <!-- ============ PARTIE 1 : RÉSISTANCE ET FLUX THERMIQUE ============ -->
+  <div class="section-title"><span class="num">1</span><h2>Résistance et flux thermique</h2></div>
+  <p class="section-note">Notation scientifique acceptée sous la forme <span class="mono">4,2x10^9</span> ou <span class="mono">4.2e9</span> — ou écris le nombre décimal complet. Arrondis raisonnablement, la tolérance de correction en tient compte. Chaque question de calcul est indépendante (nouvelle paroi à chaque fois) et donne toutes les données nécessaires dans son propre énoncé — attention, certaines données fournies ne sont pas utiles au calcul demandé. Pour les réponses numériques, choisis aussi la bonne unité dans le menu déroulant : les deux doivent être correctes.</p>
+
+  <div class="card" id="thermique-block">
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q1 — Rappel de cours</span><span class="q-pts">0,5 pt</span></div>
+      <p class="q-text" id="q1-text">Le transfert de chaleur qui peut avoir lieu même à travers le vide (aucune matière nécessaire) est :</p>
+      <div class="qcm-options" id="qcm-q1"></div>
+      <span class="feedback" id="fb-q1"></span>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q2 — Rappel de cours</span><span class="q-pts">0,5 pt</span></div>
+      <p class="q-text" id="q2-text">La conduction, contrairement à la convection, ne peut avoir lieu que :</p>
+      <div class="qcm-options" id="qcm-q2"></div>
+      <span class="feedback" id="fb-q2"></span>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q3 — Rappel de cours</span><span class="q-pts">0,5 pt</span></div>
+      <p class="q-text" id="q3-text">Le coefficient de transmission thermique U et la résistance thermique R sont liés par la relation :</p>
+      <div class="qcm-options" id="qcm-q3"></div>
+      <span class="feedback" id="fb-q3"></span>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q4 — Rappel de cours</span><span class="q-pts">0,5 pt</span></div>
+      <p class="q-text" id="q4-text">Pourquoi faut-il inclure les résistances superficielles R<sub>si</sub> et R<sub>se</sub> dans le calcul de la résistance totale d'une paroi ?</p>
+      <div class="qcm-options" id="qcm-q4"></div>
+      <span class="feedback" id="fb-q4"></span>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q5 — Résistance d'une paroi simple</span><span class="q-pts">2 pts</span></div>
+      <p class="q-text">Une paroi en <span id="d-q5-mat">béton (mur courant)</span> (λ = <span id="d-q5-lambda">1,75</span> W.m⁻¹.K⁻¹) mesure <span id="d-q5-l">5,0</span> m de large sur <span id="d-q5-h">2,5</span> m de haut, pour une épaisseur de <span id="d-q5-e">20</span> cm. Quelle est sa résistance thermique R (résistances superficielles non comprises) ?</p>
+      <div class="answer-row">
+        <input type="text" id="q5" placeholder="ex : 0,15">
+        <select id="q5-unit"><option value="" selected disabled>unité ?</option></select>
+        <span class="feedback" id="fb-q5"></span>
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q6 — Paroi à deux couches</span><span class="q-pts">2 pts</span></div>
+      <p class="q-text">Une paroi de surface totale S = <span id="d-q6-s">22,0</span> m² est composée de deux couches accolées : <span id="d-q6-mat1">brique rouge</span> (λ₁ = <span id="d-q6-l1">0,40</span> W.m⁻¹.K⁻¹, épaisseur <span id="d-q6-e1">10</span> cm) puis <span id="d-q6-mat2">laine de verre</span> (λ₂ = <span id="d-q6-l2">0,04</span> W.m⁻¹.K⁻¹, épaisseur <span id="d-q6-e2">8</span> cm). En prenant R<sub>si</sub> = 0,13 m².K.W⁻¹ et R<sub>se</sub> = 0,04 m².K.W⁻¹ (valeurs standard), quelle est la résistance thermique TOTALE de cette paroi ?</p>
+      <div class="answer-row">
+        <span class="unit-tag">R<sub>totale</sub> =</span>
+        <input type="text" id="q6" placeholder="ex : 1,5">
+        <select id="q6-unit"><option value="" selected disabled>unité ?</option></select>
+        <span class="feedback" id="fb-q6"></span>
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q7 — Coefficient de transmission</span><span class="q-pts">2 pts</span></div>
+      <p class="q-text">Une paroi d'épaisseur totale <span id="d-q7-e">28</span> cm a une résistance thermique totale R<sub>totale</sub> = <span id="d-q7-r">1,80</span> m².K.W⁻¹ (résistances superficielles comprises). Quel est son coefficient de transmission thermique U ?</p>
+      <div class="answer-row">
+        <span class="unit-tag">U =</span>
+        <input type="text" id="q7" placeholder="ex : 0,66">
+        <select id="q7-unit"><option value="" selected disabled>unité ?</option></select>
+        <span class="feedback" id="fb-q7"></span>
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q8 — Loi de Fourier</span><span class="q-pts">2 pts</span></div>
+      <p class="q-text">Une paroi d'épaisseur <span id="d-q8-e">16</span> cm a un coefficient de transmission thermique U = <span id="d-q8-u">0,55</span> W.m⁻².K⁻¹. Sa surface est S = <span id="d-q8-s">28,0</span> m² et l'écart de température entre l'air intérieur et l'air extérieur est de <span id="d-q8-dt">18</span> °C. Quel est le flux thermique Φ qui la traverse (loi de Fourier) ?</p>
+      <div class="answer-row">
+        <span class="unit-tag">Φ =</span>
+        <input type="text" id="q8" placeholder="valeur">
+        <select id="q8-unit"><option value="" selected disabled>unité ?</option></select>
+        <span class="feedback" id="fb-q8"></span>
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q9 — Densité de flux</span><span class="q-pts">2 pts</span></div>
+      <p class="q-text">Une paroi de coefficient de transmission thermique U = <span id="d-q9-u">0,70</span> W.m⁻².K⁻¹ laisse passer un flux thermique Φ = <span id="d-q9-phi">620</span> W à travers une surface S = <span id="d-q9-s">25,0</span> m². Quelle est la densité de flux φ à travers cette paroi ?</p>
+      <div class="answer-row">
+        <span class="unit-tag">φ =</span>
+        <input type="text" id="q9" placeholder="valeur">
+        <select id="q9-unit"><option value="" selected disabled>unité ?</option></select>
+        <span class="feedback" id="fb-q9"></span>
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q10 — Température de la face extérieure</span><span class="q-pts">3 pts</span></div>
+      <p class="q-text">Une paroi en <span id="d-q10-mat">silice (brique réfractaire)</span> (λ = <span id="d-q10-lambda">0,80</span> W.m⁻¹.K⁻¹), d'épaisseur <span id="d-q10-e">12</span> cm et de surface S = <span id="d-q10-s">25,0</span> m², laisse échapper un flux thermique Φ = <span id="d-q10-phi">2000</span> W. Sa face intérieure est à <span id="d-q10-t1">22</span> °C (résistances superficielles négligées dans ce calcul). Sachant par ailleurs que la toiture de ce même bâtiment a une résistance thermique de <span id="d-q10-rroof">3,20</span> m².K.W⁻¹, quelle est la température de la face extérieure de cette paroi ?</p>
+      <div class="answer-row">
+        <span class="unit-tag">T<sub>2</sub> =</span>
+        <input type="text" id="q10" placeholder="valeur">
+        <select id="q10-unit"><option value="" selected disabled>unité ?</option></select>
+        <span class="feedback" id="fb-q10"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PARTIE 2 : CHALEUR SENSIBLE ET LATENTE ============ -->
+  <div class="section-title"><span class="num">2</span><h2>Chaleur sensible et latente</h2></div>
+  <p class="section-note">C<sub>eau</sub> = 4180 J.kg⁻¹.K⁻¹, L<sub>fusion, glace</sub> = 334×10³ J.kg⁻¹. Comme en partie 1, certaines données fournies ne sont pas utiles au calcul demandé, et choisis aussi la bonne unité pour chaque réponse.</p>
+
+  <div class="card" id="chaleur-block">
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q11 — Rappel de cours</span><span class="q-pts">0,5 pt</span></div>
+      <p class="q-text" id="q11-text">Une évolution de chaleur latente se traduit par :</p>
+      <div class="qcm-options" id="qcm-q11"></div>
+      <span class="feedback" id="fb-q11"></span>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q12 — Rappel de cours</span><span class="q-pts">0,5 pt</span></div>
+      <p class="q-text" id="q12-text">Une réaction qui absorbe de l'énergie pour se produire est dite :</p>
+      <div class="qcm-options" id="qcm-q12"></div>
+      <span class="feedback" id="fb-q12"></span>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q13 — Chaleur sensible</span><span class="q-pts">2 pts</span></div>
+      <p class="q-text">On chauffe M = <span id="d-q13-m">1,5</span> kg d'eau (C = 4180 J.kg⁻¹.K⁻¹) de <span id="d-q13-ti">12</span> °C à <span id="d-q13-tf">80</span> °C, sur une plaque chauffante de puissance <span id="d-q13-p">1800</span> W. Quelle quantité de chaleur sensible Q faut-il fournir à l'eau ?</p>
+      <div class="answer-row">
+        <input type="text" id="q13" placeholder="valeur">
+        <select id="q13-unit"><option value="" selected disabled>unité ?</option></select>
+        <span class="feedback" id="fb-q13"></span>
+      </div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">Q14 — Chaleur latente</span><span class="q-pts">2 pts</span></div>
+      <p class="q-text">Dans une pièce à <span id="d-q14-troom">20</span> °C, un glaçon de masse M = <span id="d-q14-m">25</span> g, déjà à 0 °C, fond entièrement. Quelle quantité de chaleur latente Q cela représente-t-il ?</p>
+      <div class="answer-row">
+        <input type="text" id="q14" placeholder="valeur">
+        <select id="q14-unit"><option value="" selected disabled>unité ?</option></select>
+        <span class="feedback" id="fb-q14"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="submit-wrap">
+    <button type="submit" class="submit-btn" id="submit-btn">Envoyer mes réponses</button>
+    <p class="status-line" id="status-line"></p>
+  </div>
+
+</div>
+</form>
+
+<div id="result" class="card score-card">
+  <p class="eyebrow" style="color:var(--sky)">Résultat</p>
+  <h2 style="margin:0;">Bilan de <span id="result-name"></span></h2>
+  <p class="big" id="score-big">-- <small>/ 20</small></p>
+  <div class="cat-summary">
+    <div><span class="cat-label">Résistance &amp; flux</span><span class="cat-value" id="cat-thermique">--</span></div>
+    <div><span class="cat-label">Chaleur sensible &amp; latente</span><span class="cat-value" id="cat-chaleur">--</span></div>
+  </div>
+  <p class="cat-missed-line">Questions à revoir : <span id="cat-missed">--</span></p>
+  <p id="result-detail" style="color:#54605a;font-size:.9rem;"></p>
+  <button type="button" class="link-btn" id="retry-entrainement-btn" hidden>Refaire un entraînement (nouvelles valeurs)</button>
+</div>
+
+</main>
+
+<script>
+/* =========================================================================
+   CONFIGURATION — à modifier avant de diffuser la page aux élèves
+   ========================================================================= */
+const SHEET_WEBAPP_URL = "COLLE_ICI_URL_DU_WEBAPP_APPS_SCRIPT";
+
+/* =========================================================================
+   Dissuasion basique anti-copie / anti-triche (voir INSTRUCTIONS pour
+   les limites réelles de ces mesures : aucune ne remplace une surveillance
+   en classe). Ces règles sont également expliquées à l'élève dans la
+   carte "Avant de commencer" en haut de page.
+   ========================================================================= */
+document.addEventListener('copy', function(e){ e.preventDefault(); });
+document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+
+let blurCount = 0, blurTotalMs = 0, blurStart = null;
+function markBlurStart(){ if (!blurStart){ blurStart = Date.now(); blurCount++; } }
+function markBlurEnd(){ if (blurStart){ blurTotalMs += Date.now() - blurStart; blurStart = null; } }
+document.addEventListener('visibilitychange', function(){ document.hidden ? markBlurStart() : markBlurEnd(); });
+window.addEventListener('blur', markBlurStart);
+window.addEventListener('focus', markBlurEnd);
+let pageStart = Date.now(); // réinitialisé au vrai démarrage du quiz (après validation du code)
+
+/* =========================================================================
+   Utilitaires nombres / aléatoire / format FR
+   ========================================================================= */
+function randInt(min, max, step){
+  step = step || 1;
+  const n = Math.floor(Math.random() * (Math.floor((max - min) / step) + 1));
+  return min + n * step;
+}
+function randFloat(min, max, decimals){
+  decimals = decimals == null ? 1 : decimals;
+  const v = Math.random() * (max - min) + min;
+  const f = Math.pow(10, decimals);
+  return Math.round(v * f) / f;
+}
+function pick(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
+function fmtFR(n, decimals){
+  if (decimals == null){
+    return String(n).replace('.', ',');
+  }
+  return n.toFixed(decimals).replace('.', ',');
+}
+function setText(id, text){
+  const el = document.getElementById(id);
+  if (el) el.textContent = text;
+}
+
+/* =========================================================================
+   Parsing des réponses numériques (accepte virgule, point, notation
+   scientifique "4,2x10^9", "4.2e9", etc.)
+   ========================================================================= */
+function parseNumberFR(raw){
+  if (raw == null) return NaN;
+  let s = String(raw).trim();
+  if (!s) return NaN;
+  s = s.replace(/ /g,' ').replace(/\s+/g,'');
+  const sci = s.match(/^([+-]?[0-9]*[.,]?[0-9]+)[x×*]10\^?([+-]?[0-9]+)$/i);
+  if (sci){
+    const mantissa = parseFloat(sci[1].replace(',', '.'));
+    const exp = parseInt(sci[2], 10);
+    return mantissa * Math.pow(10, exp);
+  }
+  s = s.replace(',', '.');
+  return parseFloat(s);
+}
+
+/* =========================================================================
+   Unités (menus déroulants des réponses numériques). Chaque question
+   numérique doit être répondue avec la bonne VALEUR et la bonne UNITÉ :
+   les deux comptent pour que la réponse soit correcte.
+   ========================================================================= */
+const UNIT = {
+  m2KW: { value:'m2KW', label:'m².K.W⁻¹' },
+  Wm2K: { value:'Wm2K', label:'W.m⁻².K⁻¹' },
+  W:    { value:'W',    label:'W' },
+  Wm2:  { value:'Wm2',  label:'W.m⁻²' },
+  degC: { value:'degC', label:'°C' },
+  J:    { value:'J',    label:'J' },
+  WmK:  { value:'WmK',  label:'W.m⁻¹.K⁻¹' },
+  kg:   { value:'kg',   label:'kg' }
+};
+const UNIT_LABEL = {};
+Object.keys(UNIT).forEach(function(k){ UNIT_LABEL[UNIT[k].value] = UNIT[k].label; });
+
+function buildUnitSelect(id, correct, distractors){
+  const sel = document.getElementById(id);
+  if (!sel) return;
+  const opts = [correct].concat(distractors);
+  opts.sort(function(){ return Math.random() - 0.5; });
+  sel.innerHTML = '<option value="" selected disabled>unité ?</option>' + opts.map(function(o){
+    return '<option value="' + o.value + '">' + o.label + '</option>';
+  }).join('');
+}
+
+function numQ(id, expected, tol, points, unit){
+  return {
+    id, type:'num', expected, tol, points, unit: unit || null,
+    check(val, chosenUnit){
+      const v = parseNumberFR(val);
+      if (isNaN(v)) return false;
+      if (Math.abs(v - expected) > tol) return false;
+      if (this.unit && chosenUnit !== this.unit) return false;
+      return true;
+    }
+  };
+}
+function qcmQ(id, expected, points, labels){
+  return { id, type:'qcm', expected, points, labels: labels || null, check(val){ return val === expected; } };
+}
+
+/* Catégories (pour le sous-total affiché à l'élève et enregistré dans le Sheet). */
+const CATEGORY_IDS = {
+  thermique: ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10'],
+  chaleur: ['q11','q12','q13','q14']
+};
+function categoryOf(id){ return CATEGORY_IDS.thermique.indexOf(id) !== -1 ? 'thermique' : 'chaleur'; }
+
+/* Formatte la valeur attendue pour l'affichage (pas utilisé pour la
+   correction elle-même, qui reste basée sur la tolérance numérique). */
+function fmtExpected(q){
+  if (q.type === 'qcm') return (q.labels && q.labels[q.expected]) ? q.labels[q.expected] : q.expected;
+  const v = q.expected;
+  const av = Math.abs(v);
+  let s;
+  if (av !== 0 && (av >= 1e6 || av < 1e-3)){
+    s = v.toExponential(2).replace('+','').replace('e','×10^').replace('.', ',');
+  } else {
+    s = v.toFixed(3).replace(/\.?0+$/, '').replace('.', ',');
+  }
+  return q.unit ? (s + ' ' + (UNIT_LABEL[q.unit] || '')) : s;
+}
+
+/* Banque de matériaux (conductivités λ vues en cours, W.m⁻¹.K⁻¹). */
+const MATERIALS = [
+  { name: 'la laine de verre', label: 'laine de verre', lambda: 0.04 },
+  { name: 'le liège', label: 'liège', lambda: 0.04 },
+  { name: "l'argile (brique réfractaire)", label: 'argile (brique réfractaire)', lambda: 0.16 },
+  { name: 'le bois tendre (sapin)', label: 'bois tendre (sapin)', lambda: 0.10 },
+  { name: 'la brique rouge', label: 'brique rouge', lambda: 0.40 },
+  { name: 'la silice (brique réfractaire)', label: 'silice (brique réfractaire)', lambda: 0.80 },
+  { name: 'le béton (local industriel)', label: 'béton (local industriel)', lambda: 1.20 },
+  { name: 'le verre', label: 'verre', lambda: 1.15 },
+  { name: 'le béton (mur courant)', label: 'béton (mur courant)', lambda: 1.75 }
+];
+function pickTwoDistinctMaterials(){
+  const m1 = pick(MATERIALS);
+  let m2 = pick(MATERIALS);
+  let guard = 0;
+  while (m2.lambda === m1.lambda && guard < 30){ m2 = pick(MATERIALS); guard++; }
+  return [m1, m2];
+}
+
+const L_FUSION = 334000; // J.kg⁻¹ (chaleur latente de fusion de la glace, valeur standard)
+const C_EAU = 4180; // J.kg⁻¹.K⁻¹
+
+/* =========================================================================
+   Banques de questions de cours (QCM) — plusieurs variantes par question,
+   pour que les questions de cours tournent aussi d'une tentative à l'autre
+   (pas seulement les valeurs numériques). Un tirage au hasard choisit une
+   variante à chaque génération ; renderCourseQCM() l'affiche, mélange ses
+   options et construit le qcmQ correspondant.
+   ========================================================================= */
+const COURSE_QUESTION_BANKS = {
+  q1: [
+    { text: "Le transfert de chaleur qui peut avoir lieu même à travers le vide (aucune matière nécessaire) est :",
+      correct: 'rayonnement', options: [
+        { value:'conduction', label:'La conduction' },
+        { value:'convection', label:'La convection' },
+        { value:'rayonnement', label:'Le rayonnement' }
+      ] },
+    { text: "Le transfert de chaleur qui s'accompagne nécessairement d'un déplacement de matière (un fluide en mouvement) est :",
+      correct: 'convection', options: [
+        { value:'conduction', label:'La conduction' },
+        { value:'convection', label:'La convection' },
+        { value:'rayonnement', label:'Le rayonnement' }
+      ] },
+    { text: "Le transfert de chaleur qui se propage de proche en proche au sein d'un solide, sans déplacement de matière, est :",
+      correct: 'conduction', options: [
+        { value:'conduction', label:'La conduction' },
+        { value:'convection', label:'La convection' },
+        { value:'rayonnement', label:'Le rayonnement' }
+      ] },
+    { text: "Lorsqu'un radiateur chauffe l'air d'une pièce, qui se réchauffe à son contact puis monte en entraînant un mouvement d'air, le transfert de chaleur mis en jeu est principalement :",
+      correct: 'convection', options: [
+        { value:'conduction', label:'La conduction' },
+        { value:'convection', label:'La convection' },
+        { value:'rayonnement', label:'Le rayonnement' }
+      ] }
+  ],
+  q2: [
+    { text: "La conduction, contrairement à la convection, ne peut avoir lieu que :",
+      correct: 'solide', options: [
+        { value:'gaz', label:'Dans un gaz' },
+        { value:'solide', label:'Dans un solide' },
+        { value:'vide', label:'Dans le vide' },
+        { value:'meme_temp', label:'Entre deux corps à la même température' }
+      ] },
+    { text: "Le rayonnement thermique, contrairement à la conduction, peut se propager :",
+      correct: 'vide', options: [
+        { value:'solide', label:'Uniquement dans un solide' },
+        { value:'gaz', label:'Uniquement dans un gaz' },
+        { value:'vide', label:'Dans le vide' },
+        { value:'contact', label:'Uniquement entre deux corps en contact direct' }
+      ] },
+    { text: "La convection nécessite obligatoirement :",
+      correct: 'fluide_mouvement', options: [
+        { value:'solide_rigide', label:'Un solide rigide' },
+        { value:'fluide_mouvement', label:'Un fluide en mouvement (liquide ou gaz)' },
+        { value:'vide', label:'Le vide' },
+        { value:'contact_solides', label:'Un contact direct entre deux solides' }
+      ] },
+    { text: "La convection, contrairement au rayonnement, ne peut pas se produire :",
+      correct: 'vide', options: [
+        { value:'vide', label:'Dans le vide' },
+        { value:'gaz', label:'Dans un gaz' },
+        { value:'liquide', label:'Dans un liquide' },
+        { value:'solide', label:'Dans un solide' }
+      ] }
+  ],
+  q3: [
+    { text: "Le coefficient de transmission thermique U et la résistance thermique R sont liés par la relation :",
+      correct: 'u_1_r', options: [
+        { value:'u_r', label:'U = R' },
+        { value:'u_r2', label:'U = R²' },
+        { value:'u_1_r', label:'U = 1 / R' },
+        { value:'u_r_s', label:'U = R / S' }
+      ] },
+    { text: "La résistance thermique R et le coefficient de transmission thermique U sont liés par la relation :",
+      correct: 'r_1_u', options: [
+        { value:'r_u', label:'R = U' },
+        { value:'r_u2', label:'R = U²' },
+        { value:'r_1_u', label:'R = 1 / U' },
+        { value:'r_u_s', label:'R = U / S' }
+      ] },
+    { text: "Pour une paroi donnée, si son coefficient de transmission thermique U est multiplié par 2, sa résistance thermique R est :",
+      correct: 'divisee_2', options: [
+        { value:'multipliee_2', label:'Multipliée par 2' },
+        { value:'divisee_2', label:'Divisée par 2' },
+        { value:'inchangee', label:'Inchangée' },
+        { value:'divisee_4', label:'Divisée par 4' }
+      ] },
+    { text: "Si la résistance thermique R d'une paroi augmente (par exemple en ajoutant de l'isolant), son coefficient de transmission thermique U :",
+      correct: 'diminue', options: [
+        { value:'diminue', label:'Diminue' },
+        { value:'augmente', label:'Augmente' },
+        { value:'inchange', label:'Reste inchangé' },
+        { value:'double', label:'Double systématiquement' }
+      ] }
+  ],
+  q4: [
+    { text: "Pourquoi faut-il inclure les résistances superficielles R<sub>si</sub> et R<sub>se</sub> dans le calcul de la résistance totale d'une paroi ?",
+      correct: 'echanges', options: [
+        { value:'echanges', label:"Elles représentent les échanges par convection et rayonnement entre l'air et chaque face de la paroi" },
+        { value:'marge', label:'Ce sont des marges de sécurité arbitraires, sans signification physique' },
+        { value:'annule', label:"Elles annulent l'effet de l'isolant" },
+        { value:'negligeable', label:'Elles sont toujours négligeables et peuvent être ignorées' }
+      ] },
+    { text: "Parmi ces éléments, lequel n'intervient PAS dans le calcul de la résistance thermique totale d'une paroi ?",
+      correct: 'couleur', options: [
+        { value:'epaisseur', label:"L'épaisseur de chaque couche" },
+        { value:'conductivite', label:'La conductivité thermique λ de chaque couche' },
+        { value:'superficielles', label:'Les résistances superficielles R<sub>si</sub> et R<sub>se</sub>' },
+        { value:'couleur', label:'La couleur de la paroi' }
+      ] },
+    { text: "La résistance thermique totale d'une paroi multicouche (résistances superficielles comprises) s'obtient en :",
+      correct: 'addition', options: [
+        { value:'multiplication', label:'Multipliant la résistance de chaque couche' },
+        { value:'plus_grande', label:"Prenant la plus grande résistance parmi les couches" },
+        { value:'addition', label:"Additionnant la résistance de chaque couche et les résistances superficielles" },
+        { value:'moyenne', label:'Faisant la moyenne des résistances de chaque couche' }
+      ] },
+    { text: "Sur un schéma de paroi multicouche, les résistances superficielles R<sub>si</sub> et R<sub>se</sub> se situent :",
+      correct: 'interfaces_air', options: [
+        { value:'interfaces_air', label:"Aux interfaces entre la paroi et l'air intérieur et extérieur" },
+        { value:'entre_couches', label:'Uniquement entre les deux couches de matériaux' },
+        { value:'exterieur_seul', label:"Uniquement du côté extérieur de la paroi" },
+        { value:'nulle_part', label:"Nulle part, ce sont des valeurs purement théoriques sans localisation" }
+      ] }
+  ],
+  q11: [
+    { text: "Une évolution de chaleur latente se traduit par :",
+      correct: 'etat', options: [
+        { value:'temp', label:'Une hausse ou une baisse de température mesurable' },
+        { value:'etat', label:"Un changement total ou partiel de l'état physique du corps, à température constante" },
+        { value:'chimique', label:'Une réaction chimique irréversible' },
+        { value:'masse', label:'Une variation de la masse du corps' }
+      ] },
+    { text: "La chaleur sensible, contrairement à la chaleur latente, se traduit par :",
+      correct: 'temp_sans_etat', options: [
+        { value:'etat', label:"Un changement d'état à température constante" },
+        { value:'temp_sans_etat', label:'Une variation de température, sans changement d\'état' },
+        { value:'chimique', label:'Une réaction chimique irréversible' },
+        { value:'masse', label:'Une perte de masse' }
+      ] },
+    { text: "Pendant la fusion d'un mélange eau-glace, la température du mélange :",
+      correct: 'constante', options: [
+        { value:'augmente', label:'Augmente progressivement' },
+        { value:'diminue', label:'Diminue progressivement' },
+        { value:'constante', label:'Reste constante (0 °C) tout au long du changement d\'état' },
+        { value:'aleatoire', label:'Varie de façon imprévisible' }
+      ] },
+    { text: "Lorsqu'on fait bouillir de l'eau à 100 °C, la chaleur fournie pendant la vaporisation elle-même (sans élévation de température) correspond à une chaleur :",
+      correct: 'latente', options: [
+        { value:'latente', label:'Latente' },
+        { value:'sensible', label:'Sensible' },
+        { value:'nulle', label:"Nulle (aucune chaleur n'est échangée)" },
+        { value:'pression', label:"Qui dépend uniquement de la pression atmosphérique" }
+      ] }
+  ],
+  q12: [
+    { text: "Une réaction qui absorbe de l'énergie pour se produire est dite :",
+      correct: 'endo', options: [
+        { value:'exo', label:'Exothermique' },
+        { value:'endo', label:'Endothermique' },
+        { value:'iso', label:'Isotherme' },
+        { value:'adia', label:'Adiabatique' }
+      ] },
+    { text: "Une réaction qui libère de l'énergie vers le milieu extérieur est dite :",
+      correct: 'exo', options: [
+        { value:'exo', label:'Exothermique' },
+        { value:'endo', label:'Endothermique' },
+        { value:'iso', label:'Isotherme' },
+        { value:'adia', label:'Adiabatique' }
+      ] },
+    { text: "La fusion d'un solide, qui absorbe de l'énergie pour se produire, est une transformation :",
+      correct: 'endo', options: [
+        { value:'endo', label:'Endothermique' },
+        { value:'exo', label:'Exothermique' },
+        { value:'iso', label:'Isotherme' },
+        { value:'adia', label:'Adiabatique' }
+      ] },
+    { text: "La solidification de l'eau (passage de l'état liquide à l'état solide), qui libère de l'énergie vers le milieu extérieur, est une transformation :",
+      correct: 'exo', options: [
+        { value:'exo', label:'Exothermique' },
+        { value:'endo', label:'Endothermique' },
+        { value:'iso', label:'Isotherme' },
+        { value:'adia', label:'Adiabatique' }
+      ] }
+  ]
+};
+
+/* Mémorise, pour chaque question de cours, l'indice de la variante
+   affichée la dernière fois (pendant la session de page en cours), afin de
+   ne JAMAIS retomber deux fois de suite sur la même formulation — le but
+   est que le changement soit systématique d'une tentative à l'autre (pas
+   seulement probable), y compris lors de plusieurs essais consécutifs en
+   entraînement libre sans recharger la page. */
+const lastCourseVariant = {};
+
+/* Affiche une variante tirée au hasard — mais différente de la précédente —
+   pour une question de cours (texte + options mélangées), et renvoie le
+   qcmQ correspondant pour la correction. */
+function renderCourseQCM(slotId, points){
+  const bank = COURSE_QUESTION_BANKS[slotId];
+  const prevIdx = lastCourseVariant.hasOwnProperty(slotId) ? lastCourseVariant[slotId] : -1;
+  let idx = Math.floor(Math.random() * bank.length);
+  if (bank.length > 1){
+    while (idx === prevIdx){ idx = Math.floor(Math.random() * bank.length); }
+  }
+  lastCourseVariant[slotId] = idx;
+  const variant = bank[idx];
+  setText(slotId + '-text', variant.text);
+  const opts = variant.options.slice();
+  opts.sort(function(){ return Math.random() - 0.5; });
+  document.getElementById('qcm-' + slotId).innerHTML = opts.map(function(o){
+    return '<label><input type="radio" name="' + slotId + '" value="' + o.value + '"> ' + o.label + '</label>';
+  }).join('');
+  const labels = {};
+  variant.options.forEach(function(o){ labels[o.value] = o.label; });
+  return qcmQ(slotId, variant.correct, points, labels);
+}
+
+/* =========================================================================
+   Génération d'un sujet aléatoire (paramètres + questions + valeurs à
+   afficher). Rejouée à chaque démarrage (y compris à chaque nouvelle
+   tentative en mode entraînement) : chaque élève — et chaque tentative —
+   a ainsi des valeurs différentes, avec le même barème /20. Les questions
+   de cours (QCM) tournent elles aussi parmi plusieurs variantes.
+   ========================================================================= */
+function generateEvaluation(){
+  const Q = [];
+
+  // --- Q1 à Q4 : questions de cours, une variante tirée au hasard parmi
+  // COURSE_QUESTION_BANKS pour chacune (voir plus haut). ---
+  Q.push(renderCourseQCM('q1', 0.5));
+  Q.push(renderCourseQCM('q2', 0.5));
+  Q.push(renderCourseQCM('q3', 0.5));
+  Q.push(renderCourseQCM('q4', 0.5));
+
+  // --- Q5 : R = e/λ (paroi simple) --- Largeur/hauteur affichées à titre
+  // indicatif : la résistance thermique d'une couche ne dépend pas de la
+  // surface de la paroi, seulement de son épaisseur et de λ. Ce sont des
+  // données superflues (distracteurs), à volontairement ignorer.
+  const mat5 = pick(MATERIALS);
+  const e5 = randInt(5, 30); // cm
+  const l5 = randFloat(2, 8, 1); // m — distracteur
+  const h5 = randFloat(2, 4, 1); // m — distracteur
+  setText('d-q5-mat', mat5.name);
+  setText('d-q5-lambda', fmtFR(mat5.lambda, 2));
+  setText('d-q5-l', fmtFR(l5, 1));
+  setText('d-q5-h', fmtFR(h5, 1));
+  setText('d-q5-e', e5);
+  const r5 = (e5 / 100) / mat5.lambda;
+  Q.push(numQ('q5', r5, Math.max(0.01, r5 * 0.03), 2, UNIT.m2KW.value));
+  buildUnitSelect('q5-unit', UNIT.m2KW, [UNIT.Wm2K, UNIT.W]);
+
+  // --- Q6 : Rtotale (2 couches + Rsi + Rse) --- Surface S affichée à titre
+  // indicatif : non utile pour calculer une résistance (distracteur).
+  const [mat6a, mat6b] = pickTwoDistinctMaterials();
+  const e6a = randInt(3, 20); // cm
+  const e6b = randInt(3, 20); // cm
+  const s6 = randFloat(8, 40, 1); // m² — distracteur
+  setText('d-q6-s', fmtFR(s6, 1));
+  setText('d-q6-mat1', mat6a.label);
+  setText('d-q6-l1', fmtFR(mat6a.lambda, 2));
+  setText('d-q6-e1', e6a);
+  setText('d-q6-mat2', mat6b.label);
+  setText('d-q6-l2', fmtFR(mat6b.lambda, 2));
+  setText('d-q6-e2', e6b);
+  const RSI = 0.13, RSE = 0.04;
+  const r6a = (e6a / 100) / mat6a.lambda;
+  const r6b = (e6b / 100) / mat6b.lambda;
+  const rTotale6 = RSI + r6a + r6b + RSE;
+  Q.push(numQ('q6', rTotale6, Math.max(0.02, rTotale6 * 0.03), 2, UNIT.m2KW.value));
+  buildUnitSelect('q6-unit', UNIT.m2KW, [UNIT.Wm2K, UNIT.degC]);
+
+  // --- Q7 : U = 1/Rtotale --- scénario indépendant (nouvelle paroi, R
+  // totale donnée directement) : épaisseur totale affichée à titre
+  // indicatif, non utile puisque R_totale est déjà fournie (distracteur).
+  const rTotale7 = randFloat(0.3, 3.5, 2);
+  const eTotal7 = randInt(15, 40); // cm — distracteur
+  setText('d-q7-r', fmtFR(rTotale7, 2));
+  setText('d-q7-e', eTotal7);
+  const u7 = 1 / rTotale7;
+  Q.push(numQ('q7', u7, Math.max(0.01, u7 * 0.03), 2, UNIT.Wm2K.value));
+  buildUnitSelect('q7-unit', UNIT.Wm2K, [UNIT.m2KW, UNIT.W]);
+
+  // --- Q8 : Φ = U×S×ΔT --- scénario indépendant (U donné directement) :
+  // épaisseur affichée à titre indicatif, non utile puisque U est déjà
+  // fourni (distracteur).
+  const u8 = randFloat(0.3, 2.5, 2);
+  const e8 = randInt(10, 30); // cm — distracteur
+  const s8 = randFloat(5, 40, 1);
+  const dt8 = randInt(5, 30);
+  setText('d-q8-e', e8);
+  setText('d-q8-u', fmtFR(u8, 2));
+  setText('d-q8-s', fmtFR(s8, 1));
+  setText('d-q8-dt', dt8);
+  const phi8 = u8 * s8 * dt8;
+  Q.push(numQ('q8', phi8, Math.max(1, phi8 * 0.03), 2, UNIT.W.value));
+  buildUnitSelect('q8-unit', UNIT.W, [UNIT.Wm2, UNIT.Wm2K]);
+
+  // --- Q9 : φ = Φ/S --- scénario indépendant (Φ et S donnés directement) :
+  // U affiché à titre indicatif, non utile pour ce calcul (distracteur).
+  const u9 = randFloat(0.3, 2.5, 2); // distracteur
+  const phi9 = randInt(50, 1200);
+  const s9 = randFloat(5, 40, 1);
+  setText('d-q9-u', fmtFR(u9, 2));
+  setText('d-q9-phi', phi9);
+  setText('d-q9-s', fmtFR(s9, 1));
+  const phiDensity9 = phi9 / s9;
+  Q.push(numQ('q9', phiDensity9, Math.max(0.05, phiDensity9 * 0.03), 2, UNIT.Wm2.value));
+  buildUnitSelect('q9-unit', UNIT.Wm2, [UNIT.W, UNIT.Wm2K]);
+
+  // --- Q10 : isoler T2 (paroi simple, R=e/λ, Rsi/Rse négligées) ---
+  // Le flux Φ affiché est calculé à partir d'un écart de température "cible"
+  // raisonnable (pas tiré au hasard indépendamment) : cela garantit que la
+  // température extérieure obtenue reste physiquement plausible, quels que
+  // soient le matériau et l'épaisseur tirés au sort. La résistance de la
+  // toiture est une donnée superflue, sans rapport avec le calcul demandé
+  // (distracteur).
+  const mat10 = pick(MATERIALS);
+  const e10 = randInt(5, 25); // cm
+  const s10 = randFloat(10, 50, 1);
+  const t1_10 = randInt(18, 26);
+  const deltaTarget10 = randInt(2, 18); // écart T1-T2 visé, en °C
+  const rRoof10 = randFloat(1, 6, 2); // m².K.W⁻¹ — distracteur (toiture, sans rapport)
+  const r10 = (e10 / 100) / mat10.lambda;
+  const phi10 = Math.round((s10 * deltaTarget10) / r10);
+  setText('d-q10-mat', mat10.name);
+  setText('d-q10-lambda', fmtFR(mat10.lambda, 2));
+  setText('d-q10-e', e10);
+  setText('d-q10-s', fmtFR(s10, 1));
+  setText('d-q10-phi', phi10);
+  setText('d-q10-t1', t1_10);
+  setText('d-q10-rroof', fmtFR(rRoof10, 2));
+  const t2_10 = t1_10 - (phi10 * r10) / s10;
+  Q.push(numQ('q10', t2_10, Math.max(0.5, Math.abs(t2_10) * 0.05), 3, UNIT.degC.value));
+  buildUnitSelect('q10-unit', UNIT.degC, [UNIT.W, UNIT.m2KW]);
+
+  // --- Q11, Q12 : questions de cours, une variante tirée au hasard parmi
+  // COURSE_QUESTION_BANKS pour chacune (voir plus haut). ---
+  Q.push(renderCourseQCM('q11', 0.5));
+  Q.push(renderCourseQCM('q12', 0.5));
+
+  // --- Q13 : Q sensible = M×C×Δθ --- la puissance de la plaque chauffante
+  // est une donnée superflue : elle ne sert qu'à calculer une durée, pas
+  // une quantité de chaleur (distracteur).
+  const m13 = randFloat(0.5, 3, 1);
+  const ti13 = randInt(5, 20);
+  const tf13 = randInt(60, 100);
+  const p13 = randInt(800, 2500, 50); // W — distracteur
+  setText('d-q13-m', fmtFR(m13, 1));
+  setText('d-q13-ti', ti13);
+  setText('d-q13-tf', tf13);
+  setText('d-q13-p', p13);
+  const q13exp = m13 * C_EAU * (tf13 - ti13);
+  Q.push(numQ('q13', q13exp, Math.max(50, q13exp * 0.02), 2, UNIT.J.value));
+  buildUnitSelect('q13-unit', UNIT.J, [UNIT.W, UNIT.degC]);
+
+  // --- Q14 : Q latente = M×L --- la température de la pièce est une
+  // donnée superflue : la fusion a lieu à 0 °C quelle que soit la
+  // température ambiante (distracteur).
+  const massG14 = randInt(5, 80);
+  const tRoom14 = randInt(15, 28); // °C — distracteur
+  setText('d-q14-m', massG14);
+  setText('d-q14-troom', tRoom14);
+  const q14exp = (massG14 / 1000) * L_FUSION;
+  Q.push(numQ('q14', q14exp, Math.max(50, q14exp * 0.02), 2, UNIT.J.value));
+  buildUnitSelect('q14-unit', UNIT.J, [UNIT.W, UNIT.kg]);
+
+  return Q;
+}
+
+let QUESTIONS = [];
+let TOTAL_POINTS = 0;
+
+/* =========================================================================
+   Progress bar
+   ========================================================================= */
+const form = document.getElementById('quiz-form');
+function currentValue(q){
+  if (q.type === 'qcm'){
+    const el = form.querySelector('input[name="' + q.id + '"]:checked');
+    return el ? el.value : '';
+  }
+  const el = document.getElementById(q.id);
+  return el ? el.value : '';
+}
+function currentUnit(q){
+  const el = document.getElementById(q.id + '-unit');
+  return el ? el.value : '';
+}
+function isAnswered(q){
+  if (q.type === 'qcm'){
+    return String(currentValue(q)).trim() !== '';
+  }
+  const valOk = String(currentValue(q)).trim() !== '';
+  if (!valOk) return false;
+  if (q.unit){
+    return !!currentUnit(q);
+  }
+  return true;
+}
+function updateProgress(){
+  let answered = 0;
+  QUESTIONS.forEach(function(q){ if (isAnswered(q)) answered++; });
+  document.getElementById('progress-label').textContent = answered + ' / ' + QUESTIONS.length + ' répondues';
+  document.getElementById('progress-fill').style.width = (QUESTIONS.length ? (answered / QUESTIONS.length * 100) : 0) + '%';
+}
+form.addEventListener('input', updateProgress);
+form.addEventListener('change', updateProgress);
+updateProgress();
+
+/* Empêche la touche Entrée de valider/fermer la copie par accident
+   pendant la saisie d'une réponse numérique (risque de soumission
+   involontaire). L'envoi reste possible uniquement via le bouton prévu. */
+form.addEventListener('keydown', function(e){
+  if (e.key === 'Enter' && e.target && e.target.tagName === 'INPUT' && e.target.type === 'text'){
+    e.preventDefault();
+  }
+});
+
+/* =========================================================================
+   Connexion : deux modes.
+   - "evaluation" (par défaut) : nom + code d'accès, vérifiés côté serveur
+     (comme avant) — les résultats comptent et vont dans l'onglet "Réponses".
+   - "entrainement" : juste le nom, pas de code — les résultats sont
+     enregistrés à part (onglet "Entrainement"), ne comptent pas pour la
+     note, et l'élève peut refaire autant de tentatives qu'il veut (valeurs
+     re-tirées à chaque fois).
+   ========================================================================= */
+let VERIFIED = null; // { code, nom, prenom, classe }
+let ELEVES_LISTE = []; // [{nom, prenom}, ...] — jamais les codes
+let MODE = 'evaluation';
+let CURRENT_MODE = 'evaluation'; // mode figé au moment où le quiz démarre réellement
+
+const gateBtn = document.getElementById('gate-btn');
+const gateStatus = document.getElementById('gate-status');
+const gateConfirm = document.getElementById('gate-confirm');
+const nomSelect = document.getElementById('f-nom');
+const codeFieldWrap = document.getElementById('code-field-wrap');
+const entrainementNote = document.getElementById('entrainement-note');
+const tabEval = document.getElementById('tab-eval');
+const tabEntr = document.getElementById('tab-entrainement');
+
+function setMode(mode){
+  MODE = mode;
+  tabEval.classList.toggle('active', mode === 'evaluation');
+  tabEntr.classList.toggle('active', mode === 'entrainement');
+  codeFieldWrap.hidden = (mode === 'entrainement');
+  entrainementNote.hidden = (mode !== 'entrainement');
+  gateBtn.textContent = (mode === 'entrainement') ? "Commencer l'entraînement" : 'Valider mon code';
+  gateStatus.textContent = '';
+  gateConfirm.hidden = true;
+}
+tabEval.addEventListener('click', function(){ setMode('evaluation'); });
+tabEntr.addEventListener('click', function(){ setMode('entrainement'); });
+
+/* Ouvrir ce fichier directement depuis le téléphone/ordinateur (double-clic,
+   pièce jointe reçue par message, etc.) le charge en "file://" — plusieurs
+   navigateurs (Safari sur iPhone, Brave...) bloquent alors silencieusement
+   les requêtes vers un service externe (le Google Sheet), ce qui empêche
+   la liste des élèves de se charger. Chrome/Android tolère parfois encore
+   ce cas, ce qui explique que "ça marche sur certains appareils mais pas
+   sur d'autres" : la page DOIT être ouverte via son lien hébergé en ligne
+   (http/https), jamais comme fichier téléchargé ou pièce jointe. On détecte
+   ce cas ici pour donner une explication claire plutôt qu'un blocage muet. */
+const OUVERT_EN_FICHIER_LOCAL = (location.protocol === 'file:');
+
+function chargerListeEleves_(){
+  if (OUVERT_EN_FICHIER_LOCAL){
+    gateStatus.textContent = "Cette page a été ouverte comme fichier téléchargé (et non via son lien en ligne) : certains navigateurs (Safari sur iPhone, Brave...) bloquent alors le chargement de la liste des élèves. Demande à ton professeur le LIEN de la page et ouvre-le directement depuis ce lien, pas depuis le fichier reçu.";
+    return;
+  }
+  if (!SHEET_WEBAPP_URL || SHEET_WEBAPP_URL.indexOf('COLLE_ICI') !== -1){
+    gateStatus.textContent = "Cette page n'est pas encore reliée à un Google Sheet — préviens ton professeur.";
+    return;
+  }
+  const sep = SHEET_WEBAPP_URL.indexOf('?') === -1 ? '?' : '&';
+  const url = SHEET_WEBAPP_URL + sep + 'action=liste';
+  gateStatus.textContent = "Chargement de la liste des élèves...";
+  fetch(url).then(function(r){ return r.json(); }).then(function(data){
+    ELEVES_LISTE = (data && data.eleves) || [];
+    ELEVES_LISTE.forEach(function(e, i){
+      const opt = document.createElement('option');
+      opt.value = String(i);
+      opt.textContent = e.prenom + ' ' + e.nom;
+      nomSelect.appendChild(opt);
+    });
+    gateStatus.textContent = '';
+  }).catch(function(){
+    gateStatus.textContent = "Impossible de charger la liste des élèves — vérifie que tu as bien ouvert le LIEN en ligne (et pas un fichier téléchargé), puis recharge la page.";
+  });
+}
+chargerListeEleves_();
+
+function verifierIdentite_(nom, prenom, code){
+  const sep = SHEET_WEBAPP_URL.indexOf('?') === -1 ? '?' : '&';
+  const url = SHEET_WEBAPP_URL + sep + 'action=verifier'
+    + '&nom=' + encodeURIComponent(nom)
+    + '&prenom=' + encodeURIComponent(prenom)
+    + '&code=' + encodeURIComponent(code);
+  return fetch(url).then(function(r){ return r.json(); });
+}
+
+gateBtn.addEventListener('click', function(){
+  const idx = nomSelect.value;
+  if (idx === ''){ gateStatus.textContent = "Sélectionne ton nom dans la liste."; return; }
+  const eleve = ELEVES_LISTE[Number(idx)];
+
+  if (MODE === 'entrainement'){
+    VERIFIED = { code: '', nom: eleve.nom, prenom: eleve.prenom, classe: eleve.classe || '' };
+    document.getElementById('gate-name').textContent = eleve.prenom + ' ' + eleve.nom;
+    document.getElementById('gate-classe').textContent = eleve.classe || '';
+    gateConfirm.hidden = false;
+    gateStatus.textContent = '';
+    return;
+  }
+
+  const code = document.getElementById('f-code').value.trim();
+  if (!code){ gateStatus.textContent = "Saisis ton code d'accès."; return; }
+  if (!SHEET_WEBAPP_URL || SHEET_WEBAPP_URL.indexOf('COLLE_ICI') !== -1){
+    gateStatus.textContent = "Cette page n'est pas encore reliée à un Google Sheet — préviens ton professeur.";
+    return;
+  }
+  gateBtn.disabled = true;
+  gateStatus.textContent = "Vérification...";
+  verifierIdentite_(eleve.nom, eleve.prenom, code).then(function(data){
+    gateBtn.disabled = false;
+    if (data && data.found){
+      VERIFIED = { code: code, nom: data.nom, prenom: data.prenom, classe: data.classe };
+      document.getElementById('gate-name').textContent = data.prenom + ' ' + data.nom;
+      document.getElementById('gate-classe').textContent = data.classe || '';
+      gateConfirm.hidden = false;
+      gateStatus.textContent = '';
+    } else {
+      gateStatus.textContent = "Ce code ne correspond pas au nom sélectionné — vérifie et réessaie.";
+    }
+  }).catch(function(){
+    gateBtn.disabled = false;
+    gateStatus.textContent = "Impossible de vérifier ton code pour le moment (connexion). Réessaie.";
+  });
+});
+
+document.getElementById('gate-reset-btn').addEventListener('click', function(){
+  VERIFIED = null;
+  gateConfirm.hidden = true;
+  nomSelect.value = '';
+  const f = document.getElementById('f-code');
+  f.value = '';
+  f.focus();
+});
+
+function resetQuizUI(){
+  ['q5','q6','q7','q8','q9','q10','q13','q14'].forEach(function(id){
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.querySelectorAll('.feedback').forEach(function(fb){ fb.style.display = 'none'; fb.textContent = ''; });
+  document.getElementById('submit-btn').disabled = false;
+  document.getElementById('status-line').textContent = '';
+  document.getElementById('result').style.display = 'none';
+}
+
+function startQuiz(){
+  CURRENT_MODE = MODE;
+  document.getElementById('gate-card').style.display = 'none';
+  document.getElementById('rules-card').style.display = 'none';
+  document.getElementById('quiz-body').hidden = false;
+  resetQuizUI();
+  QUESTIONS = generateEvaluation();
+  TOTAL_POINTS = QUESTIONS.reduce(function(s, q){ return s + q.points; }, 0);
+  pageStart = Date.now();
+  blurCount = 0; blurTotalMs = 0; blurStart = null;
+  setText('progress-student', (CURRENT_MODE === 'entrainement' ? 'Entraînement — ' : '') + VERIFIED.prenom + ' ' + VERIFIED.nom);
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('gate-start-btn').addEventListener('click', startQuiz);
+
+document.getElementById('retry-entrainement-btn').addEventListener('click', function(){
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('quiz-body').hidden = false;
+  startQuiz();
+});
+
+/* =========================================================================
+   Soumission
+   ========================================================================= */
+form.addEventListener('submit', function(ev){
+  ev.preventDefault();
+
+  if (!VERIFIED){
+    document.getElementById('status-line').textContent = "Valide d'abord ton identité en haut de la page.";
+    return;
+  }
+
+  let score = 0, noteThermique = 0, noteChaleur = 0;
+  let maxThermique = 0, maxChaleur = 0;
+  const missed = [];
+  const details = [];
+  QUESTIONS.forEach(function(q){
+    const val = currentValue(q);
+    const chosenUnit = (q.type === 'num') ? currentUnit(q) : null;
+    const ok = String(val).trim() !== '' && q.check(val, chosenUnit);
+    const cat = categoryOf(q.id);
+    if (cat === 'thermique') maxThermique += q.points; else maxChaleur += q.points;
+    if (ok){
+      score += q.points;
+      if (cat === 'thermique') noteThermique += q.points; else noteChaleur += q.points;
+    } else {
+      missed.push(q.id.toUpperCase());
+    }
+    details.push({ question: q.id, reponse: val, unite: chosenUnit || '', attendu: q.expected, correct: ok, points: ok ? q.points : 0 });
+
+    const fb = document.getElementById('fb-' + q.id);
+    if (fb){
+      fb.style.display = 'block';
+      fb.className = 'feedback ' + (ok ? 'ok' : 'ko');
+      fb.textContent = ok ? '✓ correct' : ('✗ attendu : ' + fmtExpected(q));
+    }
+  });
+  score = Math.round(score * 10) / 10;
+  noteThermique = Math.round(noteThermique * 10) / 10;
+  noteChaleur = Math.round(noteChaleur * 10) / 10;
+
+  markBlurEnd();
+  const durationSec = Math.round((Date.now() - pageStart) / 1000);
+  const blurSec = Math.round(blurTotalMs / 1000);
+
+  document.getElementById('submit-btn').disabled = true;
+  document.getElementById('status-line').textContent = "Envoi en cours...";
+
+  const payload = {
+    mode: CURRENT_MODE,
+    code: VERIFIED.code, nom: VERIFIED.nom, prenom: VERIFIED.prenom,
+    score, total: TOTAL_POINTS,
+    noteThermique, maxThermique, noteChaleur, maxChaleur,
+    details,
+    date: new Date().toISOString(),
+    dureeSecondes: durationSec,
+    changementsOnglet: blurCount,
+    tempsHorsPageSecondes: blurSec
+  };
+
+  const finish = function(sentOk){
+    document.getElementById('result-name').textContent = VERIFIED.prenom + ' ' + VERIFIED.nom;
+    document.getElementById('score-big').innerHTML = score + ' <small>/ ' + TOTAL_POINTS + '</small>';
+    document.getElementById('cat-thermique').textContent = noteThermique + ' / ' + maxThermique;
+    document.getElementById('cat-chaleur').textContent = noteChaleur + ' / ' + maxChaleur;
+    document.getElementById('cat-missed').textContent = missed.length ? missed.join(', ') : 'aucune — tout est correct !';
+    document.getElementById('result-detail').textContent = sentOk
+      ? (CURRENT_MODE === 'entrainement' ? "Ton résultat d'entraînement a bien été enregistré (il ne compte pas pour la note)." : "Ta copie a bien été transmise à ton professeur.")
+      : "Ta note est calculée, mais l'envoi automatique a échoué — préviens ton professeur.";
+    document.getElementById('retry-entrainement-btn').hidden = (CURRENT_MODE !== 'entrainement');
+    document.getElementById('result').style.display = 'block';
+    document.getElementById('result').scrollIntoView({behavior:'smooth'});
+    document.getElementById('status-line').textContent = '';
+  };
+
+  const reject = function(message){
+    document.getElementById('status-line').textContent = message || "Code invalide — vérifie et réessaie.";
+    document.getElementById('submit-btn').disabled = false;
+  };
+
+  if (!SHEET_WEBAPP_URL || SHEET_WEBAPP_URL.indexOf('COLLE_ICI') !== -1){
+    // Pas de vérification possible sans script relié : on accepte en mode dégradé.
+    finish(false);
+    return;
+  }
+
+  fetch(SHEET_WEBAPP_URL, {
+    method: 'POST',
+    headers: {'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload)
+  }).then(function(res){ return res.json(); })
+    .then(function(data){
+      if (data && data.result === 'ok'){ finish(true); }
+      else if (data && data.result === 'invalid'){ reject(data.message); }
+      else { finish(false); } // réponse inattendue : on ne bloque pas l'élève pour un souci technique
+    })
+    .catch(function(){ finish(false); });
+});
+</script>
+</body>
+</html>
